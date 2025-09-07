@@ -1,0 +1,7 @@
+# This file is used by SDKMAN! (The Software Development Kit Manager) to manage
+# the Java version for this project. When you enter this directory, SDKMAN!
+# can automatically switch to the specified Java version if you have it installed
+# and have enabled the feature (sdk config set sdkman_auto_env true).
+#
+# For more information, see: https://sdkman.io/usage#env
+java=21-tem
