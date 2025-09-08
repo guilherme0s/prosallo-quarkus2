@@ -21,6 +21,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-arc'
     implementation 'io.quarkus:quarkus-hibernate-orm'
     implementation 'com.github.f4b6a3:tsid-creator:5.2.6'
+    implementation 'io.quarkus:quarkus-cache'
     compileOnly 'org.jspecify:jspecify:1.0.0'
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
