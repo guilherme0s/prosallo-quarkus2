@@ -29,7 +29,7 @@ public class DefaultPermissionSetService implements PermissionSetService {
                 .orElseThrow(OrganizationNotFoundException::new);
 
         if (permissionSetRepository.existsByNameAndOrganizationId(permissionSetName, organizationId)) {
-            throw new PermissionSetConflictException(permissionSetName);
+            throw new PermissionSetConflictException();
         }
 
         PermissionSet permissionSet = new PermissionSet(permissionSetName, organization);

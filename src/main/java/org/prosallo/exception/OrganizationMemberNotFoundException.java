@@ -1,8 +1,10 @@
 package org.prosallo.exception;
 
-public class OrganizationMemberNotFoundException extends RuntimeException {
+import org.prosallo.infrastructure.exception.ResourceNotFoundException;
+
+public class OrganizationMemberNotFoundException extends ResourceNotFoundException {
 
     public OrganizationMemberNotFoundException() {
-        super("Organization member not found");
+        super("The requested organization member could not be found");
     }
 }

@@ -1,8 +1,11 @@
 package org.prosallo.exception;
 
-public class PermissionSetConflictException extends RuntimeException {
+import jakarta.ws.rs.core.Response;
+import org.prosallo.infrastructure.exception.HttpResponseException;
 
-    public PermissionSetConflictException(String permissionSetName) {
-        super(String.format("Permission set %s already exists for this organization", permissionSetName));
+public class PermissionSetConflictException extends HttpResponseException {
+
+    public PermissionSetConflictException() {
+        super(Response.Status.CONFLICT, "A permission set with the same name already exists in this organization");
     }
 }
