@@ -1,59 +1,29 @@
 package org.prosallo.repository;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import org.prosallo.infrastructure.persistence.AbstractCrudRepository;
+import org.prosallo.infrastructure.persistence.Filters;
 import org.prosallo.model.PermissionSet;
 
 import java.util.Optional;
 
 @ApplicationScoped
-public class DefaultPermissionSetRepository implements PermissionSetRepository {
-
-    @PersistenceContext
-    private EntityManager em;
-
-    @Override
-    public PermissionSet save(PermissionSet permissionSet) {
-        if (permissionSet.isNew()) {
-            em.persist(permissionSet);
-            return permissionSet;
-        }
-        return em.merge(permissionSet);
-    }
-
-    @Override
-    public Optional<PermissionSet> findById(Long id) {
-        return Optional.ofNullable(em.find(PermissionSet.class, id));
-    }
+public class DefaultPermissionSetRepository extends AbstractCrudRepository<PermissionSet, Long>
+        implements PermissionSetRepository {
 
     @Override
     public Optional<PermissionSet> findByNameAndOrganizationId(String name, Long organizationId) {
-        try {
-            return Optional.of(em.createQuery("SELECT ps FROM PermissionSet ps WHERE ps.name = :name AND ps.organization.id = :organizationId", PermissionSet.class)
-                    .setParameter("name", name)
-                    .setParameter("organizationId", organizationId)
-                    .getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return findOneBy(
+                Filters.eq(root -> root.get("name"), name),
+                Filters.eq(root -> root.get("organization").get("id"), organizationId)
+        );
     }
 
     @Override
     public boolean existsByNameAndOrganizationId(String name, Long organizationId) {
-        TypedQuery<Long> query = em.createQuery("""
-                        SELECT COUNT (ps)
-                        FROM PermissionSet ps
-                        WHERE ps.name = :name
-                          AND ps.organization.id = :organizationId
-                        """,
-                Long.class);
-
-        query.setParameter("name", name);
-        query.setParameter("organizationId", organizationId);
-
-        return query.getSingleResult() > 0;
+        return countBy(
+                Filters.eq(root -> root.get("name"), name),
+                Filters.eq(root -> root.get("organization").get("id"), organizationId)
+        ) > 0;
     }
 }
