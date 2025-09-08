@@ -10,6 +10,8 @@ public interface PermissionSetRepository {
 
     Optional<PermissionSet> findById(Long id);
 
+    Optional<PermissionSet> findByIdAndOrganizationId(Long id, Long organizationId);
+
     Optional<PermissionSet> findByNameAndOrganizationId(String name, Long organizationId);
 
     boolean existsByNameAndOrganizationId(String name, Long organizationId);

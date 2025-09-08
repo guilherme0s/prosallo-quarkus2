@@ -12,6 +12,14 @@ public class DefaultPermissionSetRepository extends AbstractCrudRepository<Permi
         implements PermissionSetRepository {
 
     @Override
+    public Optional<PermissionSet> findByIdAndOrganizationId(Long id, Long organizationId) {
+        return findOneBy(
+                Filters.eq(root -> root.get("id"), id),
+                Filters.eq(root -> root.get("organization").get("id"), organizationId)
+        );
+    }
+
+    @Override
     public Optional<PermissionSet> findByNameAndOrganizationId(String name, Long organizationId) {
         return findOneBy(
                 Filters.eq(root -> root.get("name"), name),

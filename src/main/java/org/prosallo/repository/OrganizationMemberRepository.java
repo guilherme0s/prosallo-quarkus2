@@ -9,4 +9,6 @@ public interface OrganizationMemberRepository {
     OrganizationMember save(OrganizationMember organizationMember);
 
     Optional<OrganizationMember> findById(Long id);
+
+    boolean existsByUserIdAndOrganizationId(String userId, Long organizationId);
 }
