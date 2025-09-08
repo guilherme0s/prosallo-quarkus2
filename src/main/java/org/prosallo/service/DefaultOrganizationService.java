@@ -3,6 +3,7 @@ package org.prosallo.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.prosallo.data.OrganizationResponse;
+import org.prosallo.exception.OrganizationOwnershipConflictException;
 import org.prosallo.model.Organization;
 import org.prosallo.model.OrganizationMember;
 import org.prosallo.repository.OrganizationMemberRepository;
@@ -23,6 +24,10 @@ public class DefaultOrganizationService implements OrganizationService {
     @Override
     @Transactional
     public OrganizationResponse createOrganization(String ownerId, String name) {
+        if (organizationRepository.existsByOwnerId(ownerId)) {
+            throw new OrganizationOwnershipConflictException();
+        }
+
         Organization organization = new Organization(name, ownerId);
         organization = organizationRepository.save(organization);
 
