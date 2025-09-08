@@ -63,6 +63,15 @@ public abstract class AbstractCrudRepository<T extends Persistable<ID>, ID> {
         return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
+    /**
+     * Deletes a given entity from the database.
+     *
+     * @param entity the entity to delete; must not be {@code null}.
+     */
+    public void delete(@NonNull T entity) {
+        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
+    }
+
     @SafeVarargs
     protected final Optional<T> findOneBy(@NonNull Specification<T>... specs) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();

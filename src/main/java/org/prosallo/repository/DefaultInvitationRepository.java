@@ -24,4 +24,12 @@ public class DefaultInvitationRepository extends AbstractCrudRepository<Invitati
                 Filters.eq(root -> root.get("accepted"), false)
         ) > 0;
     }
+
+    @Override
+    public Optional<Invitation> findByIdAndOrganizationId(Long id, Long organizationId) {
+        return findOneBy(
+                Filters.eq(root -> root.get("id"), id),
+                Filters.eq(root -> root.get("organization").get("id"), organizationId)
+        );
+    }
 }

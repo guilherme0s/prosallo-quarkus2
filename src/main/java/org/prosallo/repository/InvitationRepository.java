@@ -11,4 +11,8 @@ public interface InvitationRepository {
     Optional<Invitation> findByToken(String token);
 
     boolean existsPendingByOrganizationIdAndEmail(Long organizationId, String email);
+
+    Optional<Invitation> findByIdAndOrganizationId(Long id, Long organizationId);
+
+    void delete(Invitation invitation);
 }

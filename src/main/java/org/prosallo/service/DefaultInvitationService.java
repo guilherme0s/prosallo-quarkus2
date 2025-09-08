@@ -8,6 +8,7 @@ import org.prosallo.exception.OrganizationNotFoundException;
 import org.prosallo.exception.PendingInvitationExistsException;
 import org.prosallo.exception.PermissionSetNotFoundException;
 import org.prosallo.infrastructure.configuration.InvitationConfiguration;
+import org.prosallo.infrastructure.exception.ResourceNotFoundException;
 import org.prosallo.mapper.InvitationMapper;
 import org.prosallo.model.Invitation;
 import org.prosallo.model.Organization;
@@ -61,5 +62,14 @@ public class DefaultInvitationService implements InvitationService {
         invitation = invitationRepository.save(invitation);
 
         return invitationMapper.toResponse(invitation);
+    }
+
+    @Override
+    @Transactional
+    public void deleteInvitation(Long organizationId, Long invitationId) {
+        Invitation invitation = invitationRepository.findByIdAndOrganizationId(invitationId, organizationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Invitation not found"));
+
+        invitationRepository.delete(invitation);
     }
 }

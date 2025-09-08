@@ -2,6 +2,7 @@ package org.prosallo.resource;
 
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -34,5 +35,16 @@ public class InvitationResource {
 
         InvitationResponse response = invitationService.createInvitation(organizationId, request);
         return Response.status(Response.Status.CREATED).entity(response).build();
+    }
+
+    @DELETE
+    @Path("/{invitationId}")
+    public Response delete(@PathParam("organizationId") Long organizationId,
+            @PathParam("invitationId") Long invitationId) {
+
+        securityContext.requireOrganizationOwnership(organizationId);
+
+        invitationService.deleteInvitation(organizationId, invitationId);
+        return Response.noContent().build();
     }
 }
