@@ -23,7 +23,7 @@ public class DefaultOrganizationService implements OrganizationService {
     @Override
     @Transactional
     public OrganizationResponse createOrganization(String ownerId, String name) {
-        Organization organization = new Organization(name);
+        Organization organization = new Organization(name, ownerId);
         organization = organizationRepository.save(organization);
 
         OrganizationMember organizationMember = new OrganizationMember(ownerId, organization);

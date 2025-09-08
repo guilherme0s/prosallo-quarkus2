@@ -12,14 +12,22 @@ public class Organization extends AbstractAuditable {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "owner_id", nullable = false, updatable = false)
+    private String ownerId;
+
     protected Organization() {
     }
 
-    public Organization(String name) {
+    public Organization(String name, String ownerId) {
         this.name = name;
+        this.ownerId = ownerId;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
     }
 }
