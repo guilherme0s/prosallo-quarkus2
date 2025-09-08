@@ -19,12 +19,24 @@ public class OrganizationMember extends AbstractAuditable {
     @JoinColumn(name = "organization_id", nullable = false, updatable = false)
     private Organization organization;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "permission_set_id")
+    private PermissionSet permissionSet;
+
     protected OrganizationMember() {
     }
 
     public OrganizationMember(String userId, Organization organization) {
         this.userId = userId;
         this.organization = organization;
+    }
+
+    public void assignPermissionSet(PermissionSet permissionSet) {
+        this.permissionSet = permissionSet;
+    }
+
+    public PermissionSet getPermissionSet() {
+        return permissionSet;
     }
 
     public String getUserId() {
