@@ -5,4 +5,6 @@ public interface AuthorizationService {
     boolean isOrganizationOwner(String userId, Long organizationId);
 
     void requireOrganizationOwnership(String userId, Long organizationId);
+
+    void requireMembership(String userId, Long organizationId);
 }

@@ -8,4 +8,6 @@ import java.util.List;
 public interface OrganizationMemberRepository extends CrudRepository<OrganizationMember, Long> {
 
     List<OrganizationMember> findAllByUserId(String userId);
+
+    boolean existsByUserIdAndOrganizationId(String userId, Long organizationId);
 }

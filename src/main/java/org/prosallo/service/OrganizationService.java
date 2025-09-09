@@ -9,4 +9,6 @@ public interface OrganizationService {
     OrganizationResponse createOrganization(String ownerId, String name);
 
     List<OrganizationResponse> listOrganizationsForUser(String userId);
+
+    OrganizationResponse getOrganization(Long organizationId);
 }

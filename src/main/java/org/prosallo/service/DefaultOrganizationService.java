@@ -4,6 +4,7 @@ import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.prosallo.data.OrganizationResponse;
+import org.prosallo.exception.OrganizationNotFoundException;
 import org.prosallo.exception.OrganizationOwnershipConflictException;
 import org.prosallo.model.Organization;
 import org.prosallo.model.OrganizationMember;
@@ -47,5 +48,12 @@ public class DefaultOrganizationService implements OrganizationService {
                 .map(OrganizationMember::getOrganization)
                 .map(org -> new OrganizationResponse(org.getId(), org.getName()))
                 .toList();
+    }
+
+    @Override
+    public OrganizationResponse getOrganization(Long organizationId) {
+        return organizationRepository.findById(organizationId)
+                .map(org -> new OrganizationResponse(org.getId(), org.getName()))
+                .orElseThrow(OrganizationNotFoundException::new);
     }
 }

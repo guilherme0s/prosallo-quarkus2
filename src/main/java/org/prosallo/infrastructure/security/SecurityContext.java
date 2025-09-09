@@ -22,4 +22,6 @@ public interface SecurityContext {
      * @throws org.prosallo.infrastructure.exception.ForbiddenException if the principal is not the owner.
      */
     void requireOrganizationOwnership(Long organizationId);
+
+    void requireMembership(Long organizationId);
 }

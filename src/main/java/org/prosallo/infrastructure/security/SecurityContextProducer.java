@@ -53,5 +53,10 @@ public class SecurityContextProducer {
         public void requireOrganizationOwnership(Long organizationId) {
             authorizationService.requireOrganizationOwnership(userId, organizationId);
         }
+
+        @Override
+        public void requireMembership(Long organizationId) {
+            authorizationService.requireMembership(userId, organizationId);
+        }
     }
 }
