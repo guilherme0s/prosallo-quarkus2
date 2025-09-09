@@ -12,14 +12,6 @@ public class DefaultOrganizationMemberRepository extends AbstractCrudRepository<
         implements OrganizationMemberRepository {
 
     @Override
-    public boolean existsByUserIdAndOrganizationId(String userId, Long organizationId) {
-        return countBy(
-                Filters.eq(root -> root.get("userId"), userId),
-                Filters.eq(root -> root.get("organization").get("id"), organizationId)
-        ) > 0;
-    }
-
-    @Override
     public List<OrganizationMember> findAllByUserId(String userId) {
         return findBy(Filters.eq(root -> root.get("userId"), userId));
     }

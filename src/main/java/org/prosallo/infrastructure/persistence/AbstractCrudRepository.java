@@ -14,13 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * An abstract base class for repositories providing common CRUD operations.
- *
- * @param <T> the entity type, which must extend {@link Persistable}.
- * @param <ID> the type of the entity's identifier.
- */
-public abstract class AbstractCrudRepository<T extends Persistable<ID>, ID> {
+public abstract class AbstractCrudRepository<T extends Persistable<ID>, ID> implements CrudRepository<T, ID> {
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -52,6 +46,7 @@ public abstract class AbstractCrudRepository<T extends Persistable<ID>, ID> {
         throw new IllegalArgumentException("Could not find generic type argument");
     }
 
+    @Override
     public T save(@NonNull T entity) {
         if (entity.isNew()) {
             entityManager.persist(entity);
@@ -60,15 +55,12 @@ public abstract class AbstractCrudRepository<T extends Persistable<ID>, ID> {
         return entityManager.merge(entity);
     }
 
+    @Override
     public Optional<T> findById(@NonNull ID id) {
         return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
-    /**
-     * Deletes a given entity from the database.
-     *
-     * @param entity the entity to delete; must not be {@code null}.
-     */
+    @Override
     public void delete(@NonNull T entity) {
         entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
     }

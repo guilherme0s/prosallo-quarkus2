@@ -1,17 +1,11 @@
 package org.prosallo.repository;
 
+import org.prosallo.infrastructure.persistence.CrudRepository;
 import org.prosallo.model.OrganizationMember;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface OrganizationMemberRepository {
-
-    OrganizationMember save(OrganizationMember organizationMember);
-
-    Optional<OrganizationMember> findById(Long id);
-
-    boolean existsByUserIdAndOrganizationId(String userId, Long organizationId);
+public interface OrganizationMemberRepository extends CrudRepository<OrganizationMember, Long> {
 
     List<OrganizationMember> findAllByUserId(String userId);
 }

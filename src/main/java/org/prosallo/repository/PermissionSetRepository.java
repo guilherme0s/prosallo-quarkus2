@@ -1,18 +1,13 @@
 package org.prosallo.repository;
 
+import org.prosallo.infrastructure.persistence.CrudRepository;
 import org.prosallo.model.PermissionSet;
 
 import java.util.Optional;
 
-public interface PermissionSetRepository {
-
-    PermissionSet save(PermissionSet permissionSet);
-
-    Optional<PermissionSet> findById(Long id);
+public interface PermissionSetRepository extends CrudRepository<PermissionSet, Long> {
 
     Optional<PermissionSet> findByIdAndOrganizationId(Long id, Long organizationId);
-
-    Optional<PermissionSet> findByNameAndOrganizationId(String name, Long organizationId);
 
     boolean existsByNameAndOrganizationId(String name, Long organizationId);
 }

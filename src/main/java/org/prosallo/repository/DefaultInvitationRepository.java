@@ -12,11 +12,6 @@ public class DefaultInvitationRepository extends AbstractCrudRepository<Invitati
         implements InvitationRepository {
 
     @Override
-    public Optional<Invitation> findByToken(String token) {
-        return findOneBy(Filters.eq(root -> root.get("token"), token));
-    }
-
-    @Override
     public boolean existsPendingByOrganizationIdAndEmail(Long organizationId, String email) {
         return countBy(
                 Filters.eq(root -> root.get("organization").get("id"), organizationId),
