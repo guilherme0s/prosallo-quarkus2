@@ -1,7 +1,5 @@
 package org.prosallo.resource;
 
-import io.quarkus.security.identity.SecurityIdentity;
-import io.smallrye.jwt.auth.principal.JWTCallerPrincipal;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -11,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.prosallo.data.OrganizationRequest;
 import org.prosallo.data.OrganizationResponse;
+import org.prosallo.infrastructure.security.SecurityContext;
 import org.prosallo.service.OrganizationService;
 
 @Path("/api/v1/organizations")
@@ -19,17 +18,17 @@ import org.prosallo.service.OrganizationService;
 public class OrganizationResource {
 
     private final OrganizationService organizationService;
-    private final SecurityIdentity securityIdentity;
+    private final SecurityContext securityContext;
 
-    public OrganizationResource(OrganizationService organizationService, SecurityIdentity securityIdentity) {
+    public OrganizationResource(OrganizationService organizationService, SecurityContext securityContext) {
         this.organizationService = organizationService;
-        this.securityIdentity = securityIdentity;
+        this.securityContext = securityContext;
     }
 
     @POST
     public Response create(@Valid OrganizationRequest request) {
-        JWTCallerPrincipal principal = securityIdentity.getPrincipal(JWTCallerPrincipal.class);
-        OrganizationResponse response = organizationService.createOrganization(principal.getSubject(), request.name());
+        String userId = securityContext.getAuthenticatedUserId();
+        OrganizationResponse response = organizationService.createOrganization(userId, request.name());
         return Response.status(Response.Status.CREATED).entity(response).build();
     }
 }

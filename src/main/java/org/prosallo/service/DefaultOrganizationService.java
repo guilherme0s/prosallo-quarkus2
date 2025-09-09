@@ -1,5 +1,6 @@
 package org.prosallo.service;
 
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.prosallo.data.OrganizationResponse;
@@ -8,6 +9,8 @@ import org.prosallo.model.Organization;
 import org.prosallo.model.OrganizationMember;
 import org.prosallo.repository.OrganizationMemberRepository;
 import org.prosallo.repository.OrganizationRepository;
+
+import java.util.List;
 
 @ApplicationScoped
 public class DefaultOrganizationService implements OrganizationService {
@@ -35,5 +38,14 @@ public class DefaultOrganizationService implements OrganizationService {
         organizationMemberRepository.save(organizationMember);
 
         return new OrganizationResponse(organization.getId(), organization.getName());
+    }
+
+    @Override
+    @CacheResult(cacheName = "user-organizations")
+    public List<OrganizationResponse> listOrganizationsForUser(String userId) {
+        return organizationMemberRepository.findAllByUserId(userId).stream()
+                .map(OrganizationMember::getOrganization)
+                .map(org -> new OrganizationResponse(org.getId(), org.getName()))
+                .toList();
     }
 }

@@ -11,6 +11,7 @@ import org.jspecify.annotations.NonNull;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -107,5 +108,26 @@ public abstract class AbstractCrudRepository<T extends Persistable<ID>, ID> {
         }
 
         return entityManager.createQuery(cq).getSingleResult();
+    }
+
+    /**
+     * Retrieves all entities that match the given specifications.
+     *
+     * @param specs a varargs array of {@link Specification} criteria to apply to the query.
+     * @return a {@link List} of matching entities; will never be {@code null}.
+     */
+    @SafeVarargs
+    protected final List<T> findBy(@NonNull Specification<T>... specs) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        Root<T> root = cq.from(entityClass);
+
+        Predicate[] predicates = Arrays.stream(specs)
+                .map(s -> s.toPredicate(root, cq, cb))
+                .toArray(Predicate[]::new);
+
+        cq.select(root).where(predicates);
+
+        return entityManager.createQuery(cq).getResultList();
     }
 }
