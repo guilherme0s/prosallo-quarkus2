@@ -9,6 +9,7 @@ import org.prosallo.exception.PendingInvitationExistsException;
 import org.prosallo.exception.PermissionSetNotFoundException;
 import org.prosallo.infrastructure.configuration.InvitationConfiguration;
 import org.prosallo.infrastructure.exception.ResourceNotFoundException;
+import org.prosallo.infrastructure.security.TokenGenerator;
 import org.prosallo.mapper.InvitationMapper;
 import org.prosallo.model.Invitation;
 import org.prosallo.model.Organization;
@@ -18,7 +19,6 @@ import org.prosallo.repository.OrganizationRepository;
 import org.prosallo.repository.PermissionSetRepository;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @ApplicationScoped
 public class DefaultInvitationService implements InvitationService {
@@ -28,17 +28,20 @@ public class DefaultInvitationService implements InvitationService {
     private final InvitationRepository invitationRepository;
     private final InvitationMapper invitationMapper;
     private final InvitationConfiguration invitationConfiguration;
+    private final TokenGenerator tokenGenerator;
 
     public DefaultInvitationService(OrganizationRepository organizationRepository,
             PermissionSetRepository permissionSetRepository,
             InvitationRepository invitationRepository,
             InvitationMapper invitationMapper,
-            InvitationConfiguration invitationConfiguration) {
+            InvitationConfiguration invitationConfiguration,
+            TokenGenerator tokenGenerator) {
         this.organizationRepository = organizationRepository;
         this.permissionSetRepository = permissionSetRepository;
         this.invitationRepository = invitationRepository;
         this.invitationMapper = invitationMapper;
         this.invitationConfiguration = invitationConfiguration;
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class DefaultInvitationService implements InvitationService {
             throw new PendingInvitationExistsException();
         }
 
-        String token = UUID.randomUUID().toString();
+        String token = tokenGenerator.generateToken();
         LocalDateTime expiresAt = LocalDateTime.now().plus(invitationConfiguration.validityDuration());
 
         Invitation invitation = new Invitation(organization, permissionSet, request.email(), token, expiresAt);
